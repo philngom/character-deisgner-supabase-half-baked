@@ -9,6 +9,11 @@ export async function createCharacter(character){
         user_id: client.auth.user().id,
     };
 
+    const response = await client
+        .from('characters')
+        .insert([
+            newCharacter
+        ]);
     // use the newCharacter to create a single new character for this user in supabase
     return checkError(response);
 }

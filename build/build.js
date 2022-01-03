@@ -27,6 +27,7 @@ const logoutButton = document.getElementById('logout');
 let headCount = 0;
 let middleCount = 0;
 let bottomCount = 0;
+let catchphrases = [];
 
 headDropdown.addEventListener('change', async() => {
     // increment the correct count in state
@@ -67,12 +68,26 @@ catchphraseButton.addEventListener('click', async() => {
 });
 
 window.addEventListener('load', async() => {
-    let character;
+    let character = await getCharacter();
     // on load, attempt to fetch this user's character
 
     // if this user turns out not to have a character
     // create a new character with correct defaults for all properties (head, middle, bottom, catchphrases)
     // and put the character's catchphrases in state (we'll need to hold onto them for an interesting reason);
+    if (!character) {
+        const newCharacter = {
+            head: 'bird',
+            middle: 'blue',
+            bottom: 'leg',
+            catchphrases: []
+        };
+
+        catchphrases = newCharacter.catchphrases;
+        await createCharacter(newCharacter);
+
+    } else {
+        catchphrases = character.catchphrases;
+    }
 
     // then call the refreshData function to set the DOM with the updated data
     refreshData();
@@ -89,11 +104,20 @@ function displayStats() {
 
 
 async function fetchAndDisplayCharacter() {
-    // fetch the caracter from supabase
-
+    // fetch the character from supabase
+    let character = await getCharacter();
     // if the character has a head, display the head in the dom
     // if the character has a middle, display the middle in the dom
     // if the character has a pants, display the pants in the dom
+    if (character.head) {
+        headEl.style.backgroundImage = `url('../assets/${character.head}-head.png')`;
+    }
+    if (character.middle) {
+        middleEl.style.backgroundImage = `url('../assets/${character.middle}-middle.png')`;
+    }
+    if (character.bottom) {
+        bottomEl.style.backgroundImage = `url('../assets/${character.bottom}-pants.png')`;
+    }
 
     // loop through catchphrases and display them to the dom (clearing out old dom if necessary)
 }
