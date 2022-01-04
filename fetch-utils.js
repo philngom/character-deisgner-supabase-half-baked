@@ -77,13 +77,12 @@ export async function updateChatchphrases(value){
 CHALLENGE: how would you use this function? which functions would it replace? what's going on with the brackets in the update() arguments?
 */
 
-export async function updateCharacter(part, value){
-    const currentUserId = client.auth.user().id;
+export async function updateCharacter(part, value, id){
 
     const response = await client
         .from('characters')
         .update({ [part]: value })
-        .match({ user_id: currentUserId });
+        .match({ id: id });
 
     return checkError(response);
 }
