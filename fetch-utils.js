@@ -5,10 +5,15 @@ const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 export async function createCharacter(character){
     const newCharacter = {
-        ...character, 
-        user_id: client.auth.user().id, 
+        ...character,
+        user_id: client.auth.user().id,
     };
 
+    const response = await client
+        .from('characters')
+        .insert([
+            newCharacter
+        ]);
     // use the newCharacter to create a single new character for this user in supabase
     return checkError(response);
 }
@@ -18,8 +23,12 @@ export async function updateHead(value){
 
     // in supabase, update the head property
     // for the character whose user_id match's the currently logged in user's id
+    const response = await client
+        .from('characters')
+        .update({ head: value })
+        .match({ user_id: currentUserId });
 
-    return checkError(response);    
+    return checkError(response);
 }
 
 
@@ -28,8 +37,12 @@ export async function updateMiddle(value){
 
     // in supabase, update the middle property
     // for the character whose user_id match's the currently logged in user's id
+    const response = await client
+        .from('characters')
+        .update({ middle: value })
+        .match({ user_id: currentUserId });
 
-    return checkError(response);    
+    return checkError(response);
 }
 
 
@@ -38,8 +51,12 @@ export async function updateBottom(value){
 
     // in supabase, update the bottom property
     // for the character whose user_id match's the currently logged in user's id
+    const response = await client
+        .from('characters')
+        .update({ bottom: value })
+        .match({ user_id: currentUserId });
 
-    return checkError(response);    
+    return checkError(response);
 }
 
 export async function updateChatchphrases(value){
@@ -48,7 +65,7 @@ export async function updateChatchphrases(value){
     // in supabase, update the catchphrases property
     // for the character whose user_id match's the currently logged in user's id
 
-    return checkError(response);    
+    return checkError(response);
 }
 
 
@@ -63,7 +80,7 @@ export async function updateCharacter(part, value){
         .update({ [part]: value })
         .match({ user_id: currentUserId });
 
-    return checkError(response);    
+    return checkError(response);
 }
 */
 
@@ -75,7 +92,7 @@ export async function getCharacter() {
         .match({ user_id: client.auth.user().id, })
         .single();
 
-    return checkError(response);    
+    return checkError(response);
 }
 
 export async function getUser() {
@@ -86,7 +103,7 @@ export async function getUser() {
 export async function checkAuth() {
     const user = await getUser();
 
-    if (!user) location.replace('../'); 
+    if (!user) location.replace('../');
 }
 
 export async function redirectToBuild() {
@@ -97,7 +114,7 @@ export async function redirectToBuild() {
 
 export async function signupUser(email, password){
     const response = await client.auth.signUp({ email, password });
-    
+
     return response.user;
 }
 
