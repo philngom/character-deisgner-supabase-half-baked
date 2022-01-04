@@ -25,6 +25,7 @@ const logoutButton = document.getElementById('logout');
 let headCount = 0;
 let middleCount = 0;
 let bottomCount = 0;
+let characterID;
 let catchphrases = [];
 
 headDropdown.addEventListener('change', async() => {
@@ -32,7 +33,7 @@ headDropdown.addEventListener('change', async() => {
     headCount++;
     // update the head in supabase with the correct data
     // console.log(headDropdown.value);
-    await updateCharacter('head', headDropdown.value);
+    await updateCharacter('head', headDropdown.value, characterID);
     refreshData();
 });
 
@@ -41,7 +42,7 @@ middleDropdown.addEventListener('change', async() => {
     // increment the correct count in state
     middleCount++;
     // update the middle in supabase with the correct data
-    await updateCharacter('middle', middleDropdown.value);
+    await updateCharacter('middle', middleDropdown.value, characterID);
     refreshData();
 });
 
@@ -50,26 +51,27 @@ bottomDropdown.addEventListener('change', async() => {
     // increment the correct count in state
     bottomCount++;
     // update the bottom in supabase with the correct data
-    await updateCharacter('bottom', bottomDropdown.value);
+    await updateCharacter('bottom', bottomDropdown.value, characterID);
     refreshData();
 });
 
 catchphraseButton.addEventListener('click', async() => {
     let phrase = catchphraseInput.value;
-    catchphraseInput.value = '';
     // go fetch the old catch phrases
-    let character = await getCharacter();
-    catchphrases = character.catchphrases;
+    // let character = await getCharacter();
+    // catchphrases = character.catchphrases;
     // update the catchphrases array locally by pushing the new catchphrase into the old array
     catchphrases.push(phrase);
     // update the catchphrases in supabase by passing the mutated array to the updateCatchphrases function
     await updateChatchphrases(catchphrases);
 
+    catchphraseInput.value = '';
     refreshData();
 });
 
 window.addEventListener('load', async() => {
     let character = await getCharacter();
+    characterID = character.id;
     // on load, attempt to fetch this user's character
 
     // if this user turns out not to have a character
