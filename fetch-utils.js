@@ -78,12 +78,12 @@ CHALLENGE: how would you use this function? which functions would it replace? wh
 */
 
 export async function updateCharacter(part, value){
-    const currentUserId = client.auth.user().id;
+    const currentUserId = await getCharacter();
 
     const response = await client
         .from('characters')
         .update({ [part]: value })
-        .match({ user_id: currentUserId });
+        .match({ id: currentUserId.id });
 
     return checkError(response);
 }
